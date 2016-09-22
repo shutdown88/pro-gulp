@@ -5,7 +5,8 @@
   "main": "src/pro-gulp.js",
   "scripts": {
     "dev": "node_modules/.bin/gulp",
-    "test": "NODE_PATH=./src/ node_modules/.bin/mocha -R spec test/*.js test/**/*.js"
+    "test": "NODE_PATH=./src/ node_modules/.bin/mocha -R spec test/*.js test/**/*.js",
+    "test-task": "NODE_PATH=./src-task/ mocha -R spec test-task/lib/*.js"
   },
   "author": "Paolo Scanferla <paolo.scanferla@mondora.com>",
   "license": "MIT",

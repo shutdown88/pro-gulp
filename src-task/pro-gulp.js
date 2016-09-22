@@ -1,11 +1,11 @@
 // Rivedere nomi file, processo di build, creazione test + benchmarks
 // Impostare meglio il codice, con ramda o pointfree-fantasy
-var Task      = require("data.task");
-var monads    = require('control.monads');
-var Async     = require('control.async')(Task);
+var Task   = require("data.task");
+var monads = require('control.monads');
+var Async  = require('control.async')(Task);
 
-var log       = require("./lib/log.js");
-var taskify = require("./lib/promisify.js");
+var log     = require("./lib/log.js");
+var taskify = require("./lib/taskify.js");
 
 var tasks = {};
 
@@ -18,21 +18,35 @@ function propagateExecutionInfo(task) {
     }
 };
 
+// Return a function that when called executes the task
+// executionFunction Task a n -> (() -> ())
 function executionFunction(task) {
     return function () {
-        task.fork(noop, noop);
+        // task.fork(noop, noop);
+        console.log('About to fork task');
+        task.fork(logresult('Error: '), logresult('Result: '));
     }
 };
 
-// Per me tasks[name] può essere un task, e questa funzione può ritornare la funzione
-// che wrappa e che chiama fork
+function logresult(prefix) {
+    return function(a) {
+        console.log(prefix, a);
+    }
+}
+
 exports.task = function task (name, dependency, fn) {
     if (arguments.length !== 1) {
         var executionInfo = {name: name};
-        task[name] = Task.of(executionInfo)
+        tasks[name] = Task.of(executionInfo)
                 .chain(log.startTask)
-                .chain(propagateExecutionInfo(taskify(dependency)))
-                .chain(propagateExecutionInfo(taskify(fn || noop)))
+                .chain(
+                    // executionInfo -> Task execinfo
+                    propagateExecutionInfo(
+                            // Task a Error
+                            taskify(dependency)
+                        )
+                )
+                /*.chain(propagateExecutionInfo(taskify(fn || noop)))*/
                 .chain(log.endTask);
     }
     return executionFunction(tasks[name]);

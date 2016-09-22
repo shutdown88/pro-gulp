@@ -1,4 +1,5 @@
-var R = require('ramda');
+var R    = require('ramda');
+var Task = require("data.task");
 var util = require("gulp-util");
 
 function execTimeString(delta) {

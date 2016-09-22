@@ -21,7 +21,7 @@ var isTask = function (thing) {
     return thing instanceof Task;
 }
 
-// taskify :: () -> a -> Task a Error
+// taskify :: (() -> a) -> Task a Error
 module.exports = function taskify (fn) {
     return new Task(function (rej, res) {
         try {
