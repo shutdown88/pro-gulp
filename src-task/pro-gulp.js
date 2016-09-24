@@ -1,8 +1,7 @@
-// Rivedere nomi file, processo di build, creazione test + benchmarks
-// Impostare meglio il codice, con ramda o pointfree-fantasy
 var Task   = require("data.task");
-var monads = require('control.monads');
 var Async  = require('control.async')(Task);
+var monads = require('control.monads');
+var R      = require('ramda');
 
 var log     = require("./lib/log.js");
 var taskify = require("./lib/taskify.js");
@@ -11,49 +10,45 @@ var tasks = {};
 
 function noop() {};
 
-// propagateExecutionInfo :: Task () Error -> Task ExecutionInfo Error
-function propagateExecutionInfo(task) {
-    return function (executionInfo) {
-        task.map(executionInfo);
-    }
+// propagateInfo :: Task a Error -> b -> Task b Error
+function propagateInfo(task) {
+    return R.compose(
+        R.flip(R.map)(task),
+        R.always
+    );
 };
 
 // Return a function that when called executes the task
-// executionFunction Task a n -> (() -> ())
 function executionFunction(task) {
-    return function () {
-        // task.fork(noop, noop);
-        console.log('About to fork task');
-        task.fork(logresult('Error: '), logresult('Result: '));
+    return function (rej, res) {
+        task.fork(rej || noop, res || noop);
     }
 };
 
-function logresult(prefix) {
-    return function(a) {
-        console.log(prefix, a);
-    }
-}
-
 exports.task = function task (name, dependency, fn) {
     if (arguments.length !== 1) {
-        var executionInfo = {name: name};
-        tasks[name] = Task.of(executionInfo)
-                .chain(log.startTask)
-                .chain(
-                    // executionInfo -> Task execinfo
-                    propagateExecutionInfo(
-                            // Task a Error
-                            taskify(dependency)
-                        )
+        tasks[name] = R.pipe(
+            Task.of,
+            R.chain(log.startTask),
+            R.chain(
+                propagateInfo(taskify(dependency))
+            ),
+            R.when(
+                R.always(
+                    R.not(R.isNil(fn))
+                ),
+                R.chain(
+                    propagateInfo(taskify(fn))
                 )
-                /*.chain(propagateExecutionInfo(taskify(fn || noop)))*/
-                .chain(log.endTask);
+            ),
+            R.chain(log.endTask)
+        )({name: name});
     }
     return executionFunction(tasks[name]);
 };
 
 exports.parallel = function parallel (taskList) {
-    executionFunction(
+    return executionFunction(
         Async.parallel(
             taskList.map(
                 function (name) {
@@ -65,9 +60,10 @@ exports.parallel = function parallel (taskList) {
 };
 
 exports.sequence = function sequence (taskList) {
-    executionFunction(
+    return executionFunction(
         monads.sequence(
-           taskList.map(
+            Task,
+            taskList.map(
                 function (name) {
                     return tasks[name];
                 }

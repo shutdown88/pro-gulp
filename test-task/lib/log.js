@@ -15,7 +15,7 @@ describe("The `log.startTask` function", function () {
         util.log.restore();
     });
 
-    it("should return a Task", function() {
+    it("should return a Task", function () {
         var ret = log.startTask({});
         ret.should.be.instanceOf(Task);
     });
@@ -23,15 +23,15 @@ describe("The `log.startTask` function", function () {
     it("should return a Task that attach a Date object to the property `start` of its input", function () {
         var ctx = {};
         var ret = log.startTask(ctx);
-        ret.fork(function() {
+        ret.fork(function () {
             // TODO Fail
-        }, function(newCtx) {
+        }, function (newCtx) {
             newCtx.start.should.be.instanceOf(Date);
         });
     });
 
     it("should call the `gulp-util.log` function", function () {
-        log.startTask({}).fork(function() {}, function() {});
+        log.startTask({}).fork(function () {}, function () {});
         util.log.calledWithMatch(/Starting/).should.equal(true);
     });
 
@@ -51,34 +51,17 @@ describe("The `log.endTask` function", function () {
         var ctx = {
             start: new Date()
         };
-        var ret = log.endTask(ctx).fork(function() {
+        var ret = log.endTask(ctx).fork(function () {
             // TODO Fail
-        }, function(newCtx) {
+        }, function (newCtx) {
             newCtx.end.should.be.instanceOf(Date);
         });
     });
 
     it("should call the `gulp-util.log` function", function () {
-        log.endTask({}).fork(function() {}, function() {});
+        log.endTask({}).fork(function () {}, function () {});
         util.log.calledWithMatch(/Finished/).should.equal(true);
     });
 
-
-});
-
-describe("The `log.error` function", function () {
-
-    beforeEach(function () {
-        sinon.stub(util, "log");
-    });
-
-    afterEach(function () {
-        util.log.restore();
-    });
-
-    it("should call the `gulp-util.log` function", function () {
-        log.error.call({});
-        util.log.calledWithMatch(/Terminated/).should.equal(true);
-    });
 
 });

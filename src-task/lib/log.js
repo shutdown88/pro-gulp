@@ -27,7 +27,7 @@ exports.endTask = function endTask (execInfo) {
             "Finished '",
             util.colors.cyan(execInfo.name),
             "' after ",
-            util.colors.magenta(execTimeString(execInfo.end - execInfo.start)),
+            util.colors.magenta(execTimeString(end - execInfo.start)),
             "s"
         ].join(""));
         res(R.assoc('end', end, execInfo));

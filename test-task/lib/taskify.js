@@ -9,7 +9,7 @@ var taskify = require("lib/taskify.js");
 describe("The `taskify` function", function () {
 
     it("should return a Task", function () {
-        var ret = taskify(function() {});
+        var ret = taskify(function () {});
         ret.should.be.instanceOf(Task);
     });
 
@@ -20,7 +20,7 @@ describe("The Task returned by `taskify`", function () {
     it("should invoke the function supplied to `taskify`, when forked", function () {
         var spy = sinon.spy();
         var tsk = taskify(spy);
-        tsk.fork(function() {}, function() {});
+        tsk.fork(function () {}, function () {});
         spy.called.should.equal(true);
     });
 
@@ -45,9 +45,9 @@ describe("When the supplied function returns a stream, the Task returned", funct
             return stream;
         });
         var ret = false;
-        tsk.fork(function() {
+        tsk.fork(function () {
             ret = false;
-        }, function() {
+        }, function () {
             ret = true;
         });
         stream.emit("finish");
@@ -61,9 +61,9 @@ describe("When the supplied function returns a stream, the Task returned", funct
             return stream;
         });
         var ret = false;
-        tsk.fork(function() {
+        tsk.fork(function () {
             ret = false;
-        }, function() {
+        }, function () {
             ret = true;
         });
         stream.emit("end");
@@ -77,9 +77,9 @@ describe("When the supplied function returns a stream, the Task returned", funct
             return stream;
         });
         var ret = false;
-        tsk.fork(function() {
+        tsk.fork(function () {
             ret = false;
-        }, function() {
+        }, function () {
             ret = true;
         });
         stream.emit("error");
@@ -96,10 +96,10 @@ describe("When the supplied function returns a promise, the Task returned", func
             return promise;
         });
         var ret = false;
-        tsk.fork(function(err) {
+        tsk.fork(function (err) {
             ret = false;
             ret.should.be.equal(true);
-        }, function() {
+        }, function () {
             ret = true;
             ret.should.be.equal(true);
         });
@@ -111,10 +111,10 @@ describe("When the supplied function returns a promise, the Task returned", func
             return promise;
         });
         var ret = false;
-        tsk.fork(function() {
+        tsk.fork(function () {
             ret = false;
             ret.should.be.equal(false);
-        }, function() {
+        }, function () {
             ret = true;
             ret.should.be.equal(false);
         });
@@ -128,10 +128,10 @@ describe("When the supplied function returns a value, the Task returned", functi
         var tsk = taskify(function () {
             return value;
         });
-        tsk.fork(function() {
+        tsk.fork(function () {
             ret = false;
             ret.should.be.equal(value);
-        }, function(v) {
+        }, function (v) {
             ret = v;
             ret.should.be.equal(value);
         });
@@ -147,10 +147,10 @@ describe("When the supplied function throws, the Task returned", function () {
         var tsk = taskify(function () {
             throw error;
         });
-        tsk.fork(function(error) {
+        tsk.fork(function (error) {
             ret = error;
             ret.should.be.equal(error);
-        }, function() {
+        }, function () {
             ret = true;
             ret.should.be.equal(error);
         });
