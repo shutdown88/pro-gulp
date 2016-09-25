@@ -10,14 +10,14 @@ var mkdirp  = require("mkdirp");
 *   Task to run unit tests
 */
 gulp.task("test", function () {
-    return gulp.src(["./test/**/*.js"])
+    return gulp.src(["./task/test/**/*.js"])
         .pipe(mocha({
             reporter: "mochawesome",
             istanbul: {
                 dir: "./builds/coverage/"
             },
             env: {
-                NODE_PATH: "./src/",
+                NODE_PATH: "./task/src/",
                 MOCHAWESOME_REPORTDIR: "./builds/tests/",
                 MOCHAWESOME_REPORTNAME: "index"
             }
@@ -43,7 +43,7 @@ gulp.task("jscs", function () {
     */
     mkdirp.sync("./builds/jscs/");
     try {
-        sh("../../node_modules/.bin/jscs ../../src/ --reporter ../../node_modules/jscs-html-reporter/jscs-html-reporter.js", {
+        sh("../../node_modules/.bin/jscs ../../task/src/ ../../task/test/ ../../benchmarks --reporter ../../node_modules/jscs-html-reporter/jscs-html-reporter.js", {
             cwd: "./builds/jscs/"
         });
     } catch (ignore) {
@@ -92,8 +92,9 @@ gulp.task("server", function() {
 */
 gulp.task("dev", ["server"], function () {
     return gulp.watch([
-        "src/**/*.js",
-        "test/**/*.js"
+        "task/src/**/*.js",
+        "task/test/**/*.js",
+        "benchmarks/**/*.js"
     ], ["jscs", "test"]);
 });
 
