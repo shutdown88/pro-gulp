@@ -24,7 +24,8 @@ describe("The `log.startTask` function", function () {
         var ctx = {};
         var ret = log.startTask(ctx);
         ret.fork(function () {
-            // TODO Fail
+            // Fail
+            (true).should.be.false();
         }, function (newCtx) {
             newCtx.start.should.be.instanceOf(Date);
         });
@@ -52,7 +53,8 @@ describe("The `log.endTask` function", function () {
             start: new Date()
         };
         var ret = log.endTask(ctx).fork(function () {
-            // TODO Fail
+            // Fail
+            (true).should.be.false();
         }, function (newCtx) {
             newCtx.end.should.be.instanceOf(Date);
         });

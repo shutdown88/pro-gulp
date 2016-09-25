@@ -17,10 +17,6 @@ var isPromise = function (thing) {
     );
 };
 
-var isTask = function (thing) {
-    return thing instanceof Task;
-}
-
 // taskify :: (() -> a) -> Task a Error
 module.exports = function taskify (fn) {
     return new Task(function (rej, res) {
@@ -32,7 +28,6 @@ module.exports = function taskify (fn) {
                 ret.on("end", res)
                    .on("finish", res)
                    .on("error", rej);
-                return;
             } else {
                 res(ret);
             }

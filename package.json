@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node_modules/.bin/gulp",
     "test": "NODE_PATH=./src/ node_modules/.bin/mocha -R spec test/*.js test/**/*.js",
-    "test-task": "NODE_PATH=./src-task/ mocha -R spec test-task/*.js test-task/**/*.js"
+    "test-task": "NODE_PATH=./task/src/ mocha -R spec task/test/*.js task/test/**/*.js"
   },
   "author": "Paolo Scanferla <paolo.scanferla@mondora.com>",
   "license": "MIT",
@@ -19,6 +19,7 @@
     "ramda": "^0.22.1"
   },
   "devDependencies": {
+    "benchmark": "^2.1.1",
     "browser-sync": "^2.7.10",
     "coveralls": "^2.11.2",
     "gulp": "^3.9.0",

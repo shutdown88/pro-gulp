@@ -1,5 +1,5 @@
 var BPromise = require("bluebird");
-var Task   = require("data.task");
+var Task     = require("data.task");
 var events   = require("events");
 var should   = require("should-promised");
 var sinon    = require("sinon");
@@ -23,13 +23,6 @@ describe("The Task returned by `taskify`", function () {
         tsk.fork(function () {}, function () {});
         spy.called.should.equal(true);
     });
-
-    /*it("should return a promise", function () {
-        var spy = sinon.spy();
-        var fn = promisify(spy);
-        var ret = fn();
-        ret.should.be.a.Promise;
-    });*/
 
 });
 

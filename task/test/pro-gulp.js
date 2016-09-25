@@ -12,13 +12,13 @@ describe("The `task` method", function () {
         proGulp.__set__("tasks", {});
     });
 
-    /*it("should behave _like_ a getter when called with only one argument", function () {
+    it("should behave _like_ a getter when called with only one argument", function () {
         var tasks = {
-            name: function () {}
+            name: Task.of(0)
         };
         proGulp.__set__("tasks", tasks);
-        proGulp.task("name").should.equal(tasks.name);
-    });*/
+        proGulp.task("name").should.be.of.type("function");
+    });
 
     it("should behave _like_ a setter when called with more than one argument", function () {
         proGulp.task("name", function () {});
@@ -28,11 +28,6 @@ describe("The `task` method", function () {
 });
 
 describe("The function returned by the `task` method", function () {
-
-    /*it("should return a promise", function () {
-        proGulp.task("name", function () {});
-        proGulp.task("name")().should.be.a.Promise;
-    });*/
 
     it("should call the function(s) passed as second (and third) argument [1 function]", function () {
         var spy_0 = sinon.spy();
@@ -63,11 +58,6 @@ describe("The `parallel` method", function () {
 
 describe("The function returned by the `parallel` method", function () {
 
-    /*it("should return a promise", function () {
-        var ret = proGulp.parallel([]);
-        ret().should.be.a.Promise;
-    });
-    */
     it("should execute tasks in parallel (order does not matter)", function () {
         var spy = sinon.spy();
         proGulp.task("task_0", spy);
@@ -89,11 +79,6 @@ describe("The `sequence` method", function () {
 });
 
 describe("The function returned by the `sequence` method", function () {
-
-    /*it("should return a promise", function () {
-        var ret = proGulp.sequence([]);
-        ret().should.be.a.Promise;
-    });*/
 
     it("should execute tasks in sequence (order does matter)", function () {
         var spies = [];
@@ -127,8 +112,6 @@ describe("The function returned by the `sequence` method", function () {
         return new BPromise(function (resolve, reject) {
             ret(
                 function (err) {
-                    // TODO fail
-                    console.log("error: ", err);
                     reject(err);
                 },
                 function () {
